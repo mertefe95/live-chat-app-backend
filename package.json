@@ -7,8 +7,13 @@
     "client": "cd ../client && npm start",
     "watch-ts": "tsc -w",
     "watch-node": "nodemon dist/server.js",
-    "dev": "concurrently -k \"cd ./src && tsc -w\" \"cd ./dist && nodemon server.js\" \"npm run client\" "
+    "dev": "concurrently -k \"cd ./src && tsc -w\" \"cd ./dist && nodemon server.js\" \"npm run client\" ",
+    "postinstall": "tsc",
+    "start": "node dist/server.js"
   },
+  "engines": {
+      "node": "14.15.1" 
+    },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mertefe95/chat-app-project.git"
