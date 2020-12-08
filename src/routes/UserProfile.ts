@@ -1,7 +1,7 @@
 import express from "express";
 import { Request , Response } from "express";
 const router = express.Router();
-import UserProfile from '../models/UserProfile';
+import { UserProfile } from '../models/UserProfile';
 
 router.get('/userprofile', (req: Request, res: Response) => {
         const userProfile = UserProfile.find({})
@@ -19,4 +19,4 @@ router.get('/userprofile', (req: Request, res: Response) => {
 
 
 
-export default router;
+export { router as userProfileRouter};

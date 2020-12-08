@@ -2,20 +2,18 @@ import mongoose from "mongoose";
 import express, { Application } from "express";
 import path from "path";
 import http from "http";
-import socketio from "socket.io";
+import * as socketIO  from "socket.io";
 import cors from "cors";
 require('dotenv').config( { path: path.resolve(__dirname, '../.env') });
 
-import userRouter from "./routes/User";
-import userProfileRouter from './routes/UserProfile';
+import { userRouter } from "./routes/User";
+import { userProfileRouter } from './routes/UserProfile';
 
 const app: Application = express();
 const publicPath = path.join(__dirname, '../public');
 
 app.use(express.static(publicPath))
-console.log(process.env.ATLAS_URI)
 app.use(express.json())
-
 app.use(cors());
 app.use('/api', userRouter)
 app.use('/api', userProfileRouter)
@@ -33,14 +31,19 @@ mongoose.connect(uri, {
     useUnifiedTopology: true,
     useCreateIndex: true
 })
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+
 
 const PORT = process.env.PORT || 8080;
 
 
-server.listen(PORT, () => {
-    console.log(`${PORT} is been running.`)
-})
+const server = http.createServer(app)
+const io = socketIO(server);
+
+server.listen(PORT, () => console.log(`Server running on ${PORT}`))
+
+
+
+
+
 
 

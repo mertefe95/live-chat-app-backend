@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
-import { v4: uuidv4 } from 'uuid';
-const Schema = mongoose.Schema
+import { Schema  }  from "mongoose";
+import uuid from "uuid";
 
-
-const userSchema = new Schema({
+const userSchema : Schema = new Schema({
     username: {
         type: String,
         required: true,
@@ -22,7 +21,7 @@ const userSchema = new Schema({
     },
     activationKey: {
         type: String,
-        default: uuidv4
+        default: uuid
     },
     activatedDateTime: {
         type: Date,
@@ -31,13 +30,12 @@ const userSchema = new Schema({
     lastUpdated: {
         type: Date,
         default: null
+    },
+    forgotToken: {
+        type: String,
+        default: null
     }
-
-
-
 },
-
-
 {
     timestamps: true
 })
@@ -45,4 +43,4 @@ const userSchema = new Schema({
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User;
+export {User};
