@@ -17,6 +17,8 @@ router.get('/', (req: Request, res: Response ) => {
 
 })
 
+router.post('/')
+
 
 
 
