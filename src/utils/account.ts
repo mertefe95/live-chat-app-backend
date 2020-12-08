@@ -2,7 +2,7 @@
 import nodemailer from 'nodemailer';
 import nodemailerSendgrid  from 'nodemailer-sendgrid';
 import path from 'path';
-dotenv.config( { path: path.resolve(__dirname, '../.env') } );
+
 import  uuidv4  from 'uuid';
 
 
