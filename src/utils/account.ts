@@ -2,7 +2,6 @@
 import nodemailer from 'nodemailer';
 import nodemailerSendgrid  from 'nodemailer-sendgrid';
 import path from 'path';
-
 import  uuidv4  from 'uuid';
 
 

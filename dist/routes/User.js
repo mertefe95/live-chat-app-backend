@@ -42,9 +42,11 @@ const validator_1 = __importDefault(require("validator"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const uuid_1 = __importDefault(require("uuid"));
 const auth_1 = require("../middleware/auth");
+const google_auth_library_1 = require("google-auth-library");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config({ path: __dirname + '../../.env' });
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
+const client = new google_auth_library_1.OAuth2Client("310321453603-jj2qtlkeer5o2u30tdnf216knss728ia.apps.googleusercontent.com");
 router.get('/users', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield User_1.User.find({});
     if (!users) {
@@ -261,6 +263,15 @@ router.post("/forgot-password/", (req, res) => __awaiter(void 0, void 0, void 0,
             .status(500)
             .send();
     }
+}));
+router.post('/google-login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { tokenId } = req.body;
+    client.verifyIdToken({ idToken: tokenId, audience: "310321453603-jj2qtlkeer5o2u30tdnf216knss728ia.apps.googleusercontent.com" }).then(response => {
+        const { email_verified, name, email } = response.payload;
+        if (email_verified) {
+            User_1.User.findOne({ email }.exec((err, user)));
+        }
+    });
 }));
 router.post('/change-password', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
