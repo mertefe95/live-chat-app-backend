@@ -23,7 +23,7 @@ router.get('/users', async (req: Request, res: Response) => {
     if (!users) {
         return res
             .status(400)
-            .send({error: "No user has been found."})
+            .send({msg: "No user has been found."})
 }
 
     return res
@@ -37,7 +37,7 @@ router.get('/users/:id', async (req: Request, res: Response) => {
     if (!user) {
         return res
             .status(400)
-            .send({ error: "User not found."})
+            .send({ msg: "User not found."})
 }
 
     return res
@@ -102,11 +102,11 @@ const userK = await User.findOne({ forgotToken })
 if (!forgotToken) {
     return res
         .status(400)
-        .send({ error: "Forgot token not found in the URL. Please enter your Forgot Token. "})
+        .send({ msg: "Forgot token not found in the URL. Please enter your Forgot Token. "})
 } else if (!userK) {
     return res
         .status(400)
-        .send({ error: "No user found with the related forgot token. Empty or wrong token. "})
+        .send({ msg: "No user found with the related forgot token. Empty or wrong token. "})
 }
 
 return res
@@ -124,21 +124,21 @@ router.post('/register', async (req: Request, res: Response) => {
     if (!username || !email || !password) {
         return res
             .status(400)
-            .send({ error: "Please fill all the credentials. "})
+            .send({ msg: "Please fill all the credentials. "})
 }
 
 if (!validator.isEmail(email) || !email) {
-        return res.status(400).send({ error: 'Please enter a valid email. ' })
+        return res.status(400).send({ msg: 'Please enter a valid email. ' })
 }
 
 if (!digit.test(password) || !upperLetter.test(password)) {
     return res
         .status(400)
-        .send({ error: "Please enter a password with at least a number and an uppercase letter."})
+        .send({ msg: "Please enter a password with at least a number and an uppercase letter."})
 } else if (password.length < 8) {
         return res
             .status(400)
-            .send({ error: "Please enter a password that is at least 8 characters or more."})
+            .send({ msg: "Please enter a password that is at least 8 characters or more."})
     }
 
     try {
@@ -148,11 +148,11 @@ if (!digit.test(password) || !upperLetter.test(password)) {
         if (userExistsByEmail) {
             return res
                 .status(400)
-                .send({ error: "The email is already used."})
+                .send({ msg: "The email is already used."})
             } else if (userExistsByUserName) {
             return res
                 .status(400)
-                .send({ error: "Username already being used. Please enter a different username. "})
+                .send({ msg: "Username already being used. Please enter a different username. "})
         }
 
         let encPassword = ''
@@ -184,24 +184,24 @@ try {
         if (!email || !password) {
             return res
                 .status(400)
-                .send({ error: "Please fill the missing fields. "})
+                .send({ msg: "Please fill the missing fields. "})
         }
 
         const user: any = await User.findOne({ email  })
         if (!user) {
             return res
                 .status(400)
-                .send({ error: "An account with this email or username does not exists."})
+                .send({ msg: "An account with this email or username does not exists."})
         } else if (user && !user.activatedDateTime) {
             return res
                 .status(400)
-                .send({ error: "Please activate your account from the link we've sent to your email. "})
+                .send({ msg: "Please activate your account from the link we've sent to your email. "})
         } else if (user && user.activatedDateTime) {
             const passwordCompare = await bcrypt.compare(password, user.password)
             if (!passwordCompare) {
                 return res
                     .status(400)
-                    .send({ error: "Wrong or empty password." })
+                    .send({ msg: "Wrong or empty password." })
             } else if (passwordCompare) {
                 const token = jwt.sign(
                     {  id: user.id },
@@ -237,7 +237,7 @@ router.post("/tokenIsValid", async (req: Request, res: Response) => {
 
         return res.json(true);
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        res.status(500).json({ msg: err.message })
     }})
 
 
@@ -250,15 +250,15 @@ router.post("/forgot-password/", async (req: Request, res: Response) => {
         if (!validator.isEmail(email) || !email) {
             return res
                 .status(400)
-                .send({ error: "Please enter a valid email. "})
+                .send({ msg: "Please enter a valid email. "})
         } else if (!user) {
             return res
                 .status(404)
-                .send({ error: 'No account has been found related to that email. '})
+                .send({ msg: 'No account has been found related to that email. '})
         } else if (user.forgotToken) {
             return res
                 .status(400)
-                .send({ error: "Password change mail is already been sent. Please check your email."})
+                .send({ msg: "Password change mail is already been sent. Please check your email."})
         } else if (user) {
             
     
@@ -286,24 +286,24 @@ router.post('/change-password', async (req: Request, res: Response) => {
         if (!newPassword || !forgotToken) {
         return res
             .status(400)
-            .send({ error: "Please enter your new password and your forgot password key token."})
+            .send({ msg: "Please enter your new password and your forgot password key token."})
         } 
     
         const userK = await User.findOne({ forgotToken })
 
         if (!userK) {
         return res.status(400).send({
-            error: 'Token does not match. Enter the valid token.'
+            msg: 'Token does not match. Enter the valid token.'
         })}
 
         if (newPassword && userK){
         if (!digit.test(newPassword) || !upperLetter.test(newPassword)) {
         return res.status(400).send({
-            error:
+            msg:
             'Please enter at least a number and an uppercase letter with your password.',
         })} else if (newPassword.length < 8) {
         return res.status(400).send({
-            error: 'Please enter a password that is at least 8 or more characters.',
+            msg: 'Please enter a password that is at least 8 or more characters.',
         })} else if (digit.test(newPassword) && upperLetter.test(newPassword) && !(newPassword.length < 8) ) {
 
 
