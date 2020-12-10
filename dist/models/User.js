@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
 const mongoose_2 = require("mongoose");
-const uuid_1 = __importDefault(require("uuid"));
+const uuid_1 = require("uuid");
 const userSchema = new mongoose_2.Schema({
     username: {
         type: String,
@@ -26,7 +26,7 @@ const userSchema = new mongoose_2.Schema({
     },
     activationKey: {
         type: String,
-        default: uuid_1.default
+        default: uuid_1.v4
     },
     activatedDateTime: {
         type: Date,

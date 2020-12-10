@@ -41,6 +41,7 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const validator_1 = __importDefault(require("validator"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const uuid_1 = __importDefault(require("uuid"));
+const auth_1 = require("../middleware/auth");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config({ path: __dirname + '../../.env' });
 const SECRET_TOKEN = process.env.SECRET_TOKEN;
@@ -65,6 +66,13 @@ router.get('/users/:id', (req, res) => __awaiter(void 0, void 0, void 0, functio
     return res
         .status(200)
         .send(user);
+}));
+router.get('/', auth_1.auth, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield User_1.User.findById(req.user);
+    res.json({
+        username: user.username,
+        id: user._id
+    });
 }));
 router.get('/activation/:activationKey', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { activationKey } = req.params;
@@ -188,7 +196,7 @@ router.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* 
                     .send({ error: "Wrong or empty password." });
             }
             else if (passwordCompare) {
-                const token = jsonwebtoken_1.default.sign({ email: user.email, id: user.id }, SECRET_TOKEN);
+                const token = jsonwebtoken_1.default.sign({ id: user.id }, SECRET_TOKEN);
                 return res
                     .status(200)
                     .json({ token,
@@ -212,7 +220,7 @@ router.post("/tokenIsValid", (req, res) => __awaiter(void 0, void 0, void 0, fun
         const verified = jsonwebtoken_1.default.verify(token, SECRET_TOKEN);
         if (!verified)
             return res.json(false);
-        const user = yield User_1.User.find(verified.id);
+        const user = yield User_1.User.find(verified._id);
         if (!user)
             return res.json(false);
         return res.json(true);

@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import uuid from "uuid";
 import path from "path";
+import { auth } from "../middleware/auth";
 
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname+'../../.env' });
@@ -44,16 +45,15 @@ router.get('/users/:id', async (req: Request, res: Response) => {
         .send(user)
 })
 
-/*
-router.get('/', auth, async (req: Request, res: Response) => {
-  const user = await User.findById(req.user);
-  res.json({
-      username: user.username,
-      id: user._id,
-  });
 
+router.get('/', auth, async (req: any, res: Response) => {
+    const user: any = await User.findById(req.user);
+    res.json({
+        username: user.username,
+        id: user._id
+    });
 });
-*/
+
 
 router.get('/activation/:activationKey', async (req: Request, res: Response) => {
     const { activationKey }  = req.params
@@ -204,7 +204,7 @@ try {
                     .send({ error: "Wrong or empty password." })
             } else if (passwordCompare) {
                 const token = jwt.sign(
-                    { email: user.email, id: user.id },
+                    {  id: user.id },
                     SECRET_TOKEN
                 );
             
@@ -232,7 +232,7 @@ router.post("/tokenIsValid", async (req: Request, res: Response) => {
         if (!verified) return res.json(false);
 
 
-        const user = await User.find(verified.id);
+        const user = await User.find(verified._id);
         if (!user) return res.json(false);
 
         return res.json(true);
