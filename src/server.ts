@@ -18,9 +18,17 @@ app.use(express.json())
 
 app.use('/api', userRouter)
 app.use('/api', userProfileRouter)
-app.use(cors());
+
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 
 const uri = "mongodb+srv://admin:admin@live-chat-app.n1mw4.mongodb.net/live-chat-app?retryWrites=true&w=majority"
+
 
 const connection = mongoose.connection
 connection.once('open', () => {
@@ -41,19 +49,26 @@ const server = http.createServer(app)
 const io = require('socket.io')(server);
 
 
-io.on('connection', (socket) => {
+io.on('connection', (socket: any) => {
     console.log('We have a new connection!!!');
+
+    socket.on('join', ({ name, room }, callback) => {
+        console.log(name, room);
+
+        const error = true;
+
+        if (error) {
+            callback({ error: 'error' })
+        }
+    });
 
     socket.on('disconnect', () => {
         console.log('User had left!!!');
     })
 });
 
+
+
 server.listen(PORT, () => console.log(`Server running on ${PORT}`))
-
-
-
-
-
 
 

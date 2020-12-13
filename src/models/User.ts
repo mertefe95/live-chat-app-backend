@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Schema  }  from "mongoose";
-import { v4 as uuidv4 } from 'uuid';
+const { uuid } = require('uuidv4');
 
 const userSchema : Schema = new Schema({
     username: {
@@ -21,7 +21,7 @@ const userSchema : Schema = new Schema({
     },
     activationKey: {
         type: String,
-        default: uuidv4
+        default: uuid
     },
     activatedDateTime: {
         type: Date,

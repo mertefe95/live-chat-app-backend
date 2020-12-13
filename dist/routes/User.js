@@ -222,7 +222,7 @@ router.post("/tokenIsValid", (req, res) => __awaiter(void 0, void 0, void 0, fun
         const verified = jsonwebtoken_1.default.verify(token, SECRET_TOKEN);
         if (!verified)
             return res.json(false);
-        const user = yield User_1.User.find(verified._id);
+        const user = yield User_1.User.find(verified.id);
         if (!user)
             return res.json(false);
         return res.json(true);
@@ -263,15 +263,6 @@ router.post("/forgot-password/", (req, res) => __awaiter(void 0, void 0, void 0,
             .status(500)
             .send();
     }
-}));
-router.post('/google-login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { tokenId } = req.body;
-    client.verifyIdToken({ idToken: tokenId, audience: "310321453603-jj2qtlkeer5o2u30tdnf216knss728ia.apps.googleusercontent.com" }).then(response => {
-        const { email_verified, name, email } = response.payload;
-        if (email_verified) {
-            User_1.User.findOne({ email }.exec((err, user)));
-        }
-    });
 }));
 router.post('/change-password', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {

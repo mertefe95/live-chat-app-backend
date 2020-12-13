@@ -10,7 +10,9 @@ import mongoose from "mongoose";
 import uuid from "uuid";
 import path from "path";
 import { auth } from "../middleware/auth";
-import {OAuth2Client} from "google-auth-library";
+import { OAuth2Client } from "google-auth-library";
+import { google } from "googleapis";
+
 
 import * as dotenv from "dotenv";
 dotenv.config({ path: __dirname+'../../.env' });
@@ -234,7 +236,7 @@ router.post("/tokenIsValid", async (req: Request, res: Response) => {
         if (!verified) return res.json(false);
 
 
-        const user = await User.find(verified._id);
+        const user = await User.find(verified.id);
         if (!user) return res.json(false);
 
         return res.json(true);
@@ -278,20 +280,6 @@ router.post("/forgot-password/", async (req: Request, res: Response) => {
         }
 })
 
-router.post('/google-login', async ( req: any, res: any) => {
-    const { tokenId } = req.body
-
-
-    client.verifyIdToken({ idToken: tokenId , audience: "310321453603-jj2qtlkeer5o2u30tdnf216knss728ia.apps.googleusercontent.com"}).then(response => {
-        const {email_verified, name, email} = response.payload;
-
-        if (email_verified) {
-            User.findOne({email}.exec((err,user)))
-        }
-    })
-
-    
-} )
 
 router.post('/change-password', async (req: Request, res: Response) => {
 
